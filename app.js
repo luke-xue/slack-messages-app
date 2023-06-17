@@ -12,7 +12,7 @@ const app = new App({
 });
 
 app.event("message", async ({ message, say }) => {
-  await say(`new message from <@${message.user}>!`);
+  await say(`new message: ${message.text}`);
 });
 
 (async () => {
