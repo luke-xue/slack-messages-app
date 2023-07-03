@@ -9,9 +9,9 @@ from googleapiclient.errors import HttpError
 
 
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
 
@@ -29,9 +29,10 @@ def handle_callback(body):
         user_id = body["event"]["user"]
         ts = body["event"]["ts"]
         user = client.users_info(user=user_id)
-        print(body["event"])
-        print(user)
-        print(datetime.fromtimestamp(float(ts)).strftime('%Y-%m-%d %H:%M:%S'))
+        full_name = user['user']['profile']['first_name'] + " " + user['user']['profile']['last_name']
+        time_stamp = datetime.fromtimestamp(float(ts)).strftime('%Y-%m-%d %H:%M:%S')
+        message = body["event"]['text']
+        add_message_to_sheet(os.environ['SPREADSHEET_ID'], time_stamp, full_name, message)
     return None
 
 def add_message_to_sheet(spreadsheet_id, timestamp, name, message):
@@ -81,4 +82,4 @@ def add_message_to_sheet(spreadsheet_id, timestamp, name, message):
         print(f"An error occurred: {error}")
         return error
 
-add_message_to_sheet(os.environ['SPREADSHEET_ID'],"time","name","text")
+# add_message_to_sheet(os.environ['SPREADSHEET_ID'],"time","name","text")
